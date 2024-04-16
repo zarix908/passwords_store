@@ -7,10 +7,20 @@ import (
 	"filippo.io/age"
 )
 
-func GenerateEncryptedKey(pass string) ([]byte, error) {
+type KeyGenerator interface {
+	GenerateEncrypted(password string) ([]byte, error)
+}
+
+func NewKeyGenerator() KeyGenerator {
+	return &keyGenerator{}
+}
+
+type keyGenerator struct {}
+
+func (g *keyGenerator) GenerateEncrypted(pass string) ([]byte, error) {
 	recipient, err := age.NewScryptRecipient(pass)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get new age recipient: ")
+		return nil, fmt.Errorf("failed to get new age recipient: %w", err)
 	}
 
 	buf := bytes.NewBuffer(nil)
