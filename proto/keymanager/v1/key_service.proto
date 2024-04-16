@@ -1,0 +1,17 @@
+syntax="proto3";
+package keymanager.v1;
+
+option go_package = "github.com/zarix908/passwords_store/pkg/pb/keymanager/v1";
+
+service KeyService {
+    rpc GenerateKey(GenerateKeyRequest) returns (GenerateKeyResponse) {}
+}
+
+message GenerateKeyRequest {
+    string password = 1;
+    string file_path = 2;
+}
+
+message GenerateKeyResponse {
+    string file_path = 1;
+}
