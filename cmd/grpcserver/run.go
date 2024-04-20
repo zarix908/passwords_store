@@ -13,16 +13,15 @@ import (
 	"github.com/zarix908/passwords_store/pkg/key"
 	"github.com/zarix908/passwords_store/pkg/keymanager"
 	keymanagerpb "github.com/zarix908/passwords_store/pkg/pb/keymanager/v1"
-	"github.com/zarix908/passwords_store/pkg/storage"
 	"github.com/zarix908/passwords_store/pkg/xlog"
 )
 
 func NewRunGrpcServerCommand() *cobra.Command {
 	return &cobra.Command{
-		Use:       "rungrpc <address>",
+		Use:       "rungrpc <host:port>",
 		Short:     "Run grpc server at specified <address>",
-		ValidArgs: []string{"<address>"},
-		Example:   "passheimdal rungrpc <address>",
+		ValidArgs: []string{"<host:port>"},
+		Example:   "passheimdal rungrpc <host:port>",
 		RunE:      runGrpcServer,
 	}
 }
@@ -38,7 +37,7 @@ func runGrpcServer(_ *cobra.Command, args []string) error {
 		xlog.UnaryServerInterceptor(logger),
 	))
 
-	keymanagerpb.RegisterKeyServiceServer(s, keymanager.NewKeyServiceServer(storage.New, key.NewKeyGenerator()))
+	keymanagerpb.RegisterKeyServiceServer(s, keymanager.NewKeyServiceServer(key.NewKeyGenerator()))
 
 	addr := args[0]
 	lis, err := net.Listen("tcp", addr)

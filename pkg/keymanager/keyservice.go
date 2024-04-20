@@ -1,21 +1,22 @@
 package keymanager
 
 import (
+	"bytes"
 	"context"
+	"encoding/pem"
 
 	"github.com/zarix908/passwords_store/pkg/key"
 	pb "github.com/zarix908/passwords_store/pkg/pb/keymanager/v1"
-	"github.com/zarix908/passwords_store/pkg/storage"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
+const PassHeimdallPEMType = "PASSHEIMDALKEY"
+
 func NewKeyServiceServer(
-	fileStoreFactory func(filePath string) storage.Storage,
 	keyGenerator key.KeyGenerator,
 ) pb.KeyServiceServer {
 	return &keyServiceServer{
-		newStore:     fileStoreFactory,
 		keyGenerator: keyGenerator,
 	}
 }
@@ -23,7 +24,6 @@ func NewKeyServiceServer(
 type keyServiceServer struct {
 	pb.UnimplementedKeyServiceServer
 
-	newStore     func(filePath string) storage.Storage
 	keyGenerator key.KeyGenerator
 }
 
@@ -36,10 +36,14 @@ func (srv *keyServiceServer) GenerateKey(
 		return nil, status.Newf(codes.Internal, "failed to generate new key: %s", err.Error()).Err()
 	}
 
-	store := srv.newStore(req.FilePath)
-	if err := store.AddKey(generatedKey); err != nil {
-		return nil, status.Newf(codes.Internal, "failed add key: %s", err.Error()).Err()
+	buf := bytes.NewBuffer(nil)
+
+	if err := pem.Encode(buf, &pem.Block{
+		Type:  PassHeimdallPEMType,
+		Bytes: generatedKey,
+	}); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to encode to pem format: %v", err)
 	}
 
-	return &pb.GenerateKeyResponse{FilePath: req.FilePath}, nil
+	return &pb.GenerateKeyResponse{Key: string(buf.Bytes())}, nil
 }

@@ -9,9 +9,9 @@ service KeyService {
 
 message GenerateKeyRequest {
     string password = 1;
-    string file_path = 2;
 }
 
 message GenerateKeyResponse {
-    string file_path = 1;
+    // key in PEM format
+    string key = 1;
 }
