@@ -45,5 +45,5 @@ func (srv *keyServiceServer) GenerateKey(
 		return nil, status.Errorf(codes.Internal, "failed to encode to pem format: %v", err)
 	}
 
-	return &pb.GenerateKeyResponse{Key: string(buf.Bytes())}, nil
+	return &pb.GenerateKeyResponse{Key: buf.String()}, nil
 }

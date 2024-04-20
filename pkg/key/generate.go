@@ -15,7 +15,7 @@ func NewKeyGenerator() KeyGenerator {
 	return &keyGenerator{}
 }
 
-type keyGenerator struct {}
+type keyGenerator struct{}
 
 func (g *keyGenerator) GenerateEncrypted(pass string) ([]byte, error) {
 	recipient, err := age.NewScryptRecipient(pass)
