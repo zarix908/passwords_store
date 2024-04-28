@@ -7,3 +7,10 @@ linters:
     - staticcheck
     - unused
     - gofmt
+    - lll
+
+issues:
+  exclude-rules:
+    - path: 'pkg/pb/'
+      linters:
+        - lll
