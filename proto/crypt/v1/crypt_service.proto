@@ -4,14 +4,14 @@ package crypt.v1;
 option go_package = "github.com/zarix908/passwords_store/pkg/pb/crypt/v1";
 
 service CryptService {
-    rpc EncryptFile(EncryptFileRequest) returns (EncryptFileResponse) {}
+    rpc Encrypt(EncryptRequest) returns (EncryptResponse) {}
 }
 
-message EncryptFileRequest {
-    string age_recipients = 1;
-    bytes file = 2;
+message EncryptRequest {
+    string recipients = 1;
+    bytes data = 2;
 }
 
-message EncryptFileResponse {
-    bytes file = 1;
+message EncryptResponse {
+    bytes data = 1;
 }

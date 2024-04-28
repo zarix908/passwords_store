@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/zarix908/passwords_store/pkg/crypt"
-	"github.com/zarix908/passwords_store/pkg/encryptor"
+	"github.com/zarix908/passwords_store/pkg/encryption"
 	"github.com/zarix908/passwords_store/pkg/key"
 	"github.com/zarix908/passwords_store/pkg/keymanager"
 	cryptpb "github.com/zarix908/passwords_store/pkg/pb/crypt/v1"
@@ -41,7 +41,7 @@ func runGrpcServer(_ *cobra.Command, args []string) error {
 	))
 
 	keymanagerpb.RegisterKeyServiceServer(s, keymanager.NewKeyServiceServer(key.NewKeyGenerator()))
-	cryptpb.RegisterCryptServiceServer(s, crypt.NewCryptServiceServer(encryptor.NewEncryptor("3.8.1")))
+	cryptpb.RegisterCryptServiceServer(s, crypt.NewCryptServiceServer(encryption.NewEncryptor("3.8.1")))
 
 	addr := args[0]
 	lis, err := net.Listen("tcp", addr)

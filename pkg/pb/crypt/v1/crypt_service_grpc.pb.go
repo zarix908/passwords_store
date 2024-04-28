@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	CryptService_EncryptFile_FullMethodName = "/crypt.v1.CryptService/EncryptFile"
+	CryptService_Encrypt_FullMethodName = "/crypt.v1.CryptService/Encrypt"
 )
 
 // CryptServiceClient is the client API for CryptService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CryptServiceClient interface {
-	EncryptFile(ctx context.Context, in *EncryptFileRequest, opts ...grpc.CallOption) (*EncryptFileResponse, error)
+	Encrypt(ctx context.Context, in *EncryptRequest, opts ...grpc.CallOption) (*EncryptResponse, error)
 }
 
 type cryptServiceClient struct {
@@ -37,9 +37,9 @@ func NewCryptServiceClient(cc grpc.ClientConnInterface) CryptServiceClient {
 	return &cryptServiceClient{cc}
 }
 
-func (c *cryptServiceClient) EncryptFile(ctx context.Context, in *EncryptFileRequest, opts ...grpc.CallOption) (*EncryptFileResponse, error) {
-	out := new(EncryptFileResponse)
-	err := c.cc.Invoke(ctx, CryptService_EncryptFile_FullMethodName, in, out, opts...)
+func (c *cryptServiceClient) Encrypt(ctx context.Context, in *EncryptRequest, opts ...grpc.CallOption) (*EncryptResponse, error) {
+	out := new(EncryptResponse)
+	err := c.cc.Invoke(ctx, CryptService_Encrypt_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *cryptServiceClient) EncryptFile(ctx context.Context, in *EncryptFileReq
 // All implementations must embed UnimplementedCryptServiceServer
 // for forward compatibility
 type CryptServiceServer interface {
-	EncryptFile(context.Context, *EncryptFileRequest) (*EncryptFileResponse, error)
+	Encrypt(context.Context, *EncryptRequest) (*EncryptResponse, error)
 	mustEmbedUnimplementedCryptServiceServer()
 }
 
@@ -58,8 +58,8 @@ type CryptServiceServer interface {
 type UnimplementedCryptServiceServer struct {
 }
 
-func (UnimplementedCryptServiceServer) EncryptFile(context.Context, *EncryptFileRequest) (*EncryptFileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method EncryptFile not implemented")
+func (UnimplementedCryptServiceServer) Encrypt(context.Context, *EncryptRequest) (*EncryptResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Encrypt not implemented")
 }
 func (UnimplementedCryptServiceServer) mustEmbedUnimplementedCryptServiceServer() {}
 
@@ -74,20 +74,20 @@ func RegisterCryptServiceServer(s grpc.ServiceRegistrar, srv CryptServiceServer)
 	s.RegisterService(&CryptService_ServiceDesc, srv)
 }
 
-func _CryptService_EncryptFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EncryptFileRequest)
+func _CryptService_Encrypt_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EncryptRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CryptServiceServer).EncryptFile(ctx, in)
+		return srv.(CryptServiceServer).Encrypt(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CryptService_EncryptFile_FullMethodName,
+		FullMethod: CryptService_Encrypt_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CryptServiceServer).EncryptFile(ctx, req.(*EncryptFileRequest))
+		return srv.(CryptServiceServer).Encrypt(ctx, req.(*EncryptRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +100,8 @@ var CryptService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*CryptServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "EncryptFile",
-			Handler:    _CryptService_EncryptFile_Handler,
+			MethodName: "Encrypt",
+			Handler:    _CryptService_Encrypt_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
